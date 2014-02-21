@@ -1,5 +1,5 @@
 ﻿Imports System.IO
-Public Class MainLogger
+Public Class Logger
     Private Class LoggerClass
         Public Stream As StreamWriter
         Public Prefix As String
