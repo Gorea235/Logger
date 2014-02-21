@@ -1,6 +1,6 @@
 ﻿Imports System.IO
 Public Class Logger
-    Private Stream As StreamWriter
+    Public Location As String
     Public Prefix As String
     Public AddTime As Boolean
     Public AddDate As Boolean
@@ -14,7 +14,7 @@ Public Class Logger
     ''' <param name="LogAddDate">Whether to add the date after the prefix and time (time not needed), and before the log</param>
     ''' <remarks>The same file can have multiple loggers on it at once, allowing different prefixes etc.</remarks>
     Public Sub New(ByVal LogLocation As String, Optional ByVal LogPrefix As String = "", Optional ByVal LogAddTime As Boolean = True, Optional ByVal LogAddDate As Boolean = True)
-        Stream = New StreamWriter(LogLocation, True)
+        Location = LogLocation
         Prefix = LogPrefix
         AddTime = LogAddTime
         AddDate = LogAddDate
@@ -38,17 +38,11 @@ Public Class Logger
             StringToLog = StringToLog & "[" & Hour(Now) & ":" & Minute(Now) & ":" & Second(Now) & "] "
         End If
         StringToLog = StringToLog & LogString
-        Stream.WriteLine(StringToLog)
-        Stream.Flush()
+        Dim Streamer As New StreamWriter(Location, True)
+        Streamer.WriteLine(StringToLog)
+        Streamer.Flush()
+        Streamer.Close()
+        Streamer.Dispose()
         Return StringToLog
     End Function
-
-    ''' <summary>
-    ''' Will dispose of the logger
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Sub Dispose()
-        Stream.Dispose()
-        Me.Dispose()
-    End Sub
 End Class
