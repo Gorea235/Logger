@@ -4,6 +4,7 @@ Public Class Logger
     Public Prefix As String
     Public AddTime As Boolean
     Public AddDate As Boolean
+    Private backlog As String
 
     ''' <summary>
     ''' Will create a new Logger
@@ -38,11 +39,17 @@ Public Class Logger
             StringToLog = StringToLog & "[" & Hour(Now) & ":" & Minute(Now) & ":" & Second(Now) & "] "
         End If
         StringToLog = StringToLog & LogString
-        Dim Streamer As New StreamWriter(Location, True)
-        Streamer.WriteLine(StringToLog)
-        Streamer.Flush()
-        Streamer.Close()
-        Streamer.Dispose()
+        Dim created As Boolean = False
+        Try
+            Dim Streamer As New StreamWriter(Location, True)
+            Streamer.WriteLine(backlog + StringToLog)
+            backlog = ""
+            Streamer.Flush()
+            Streamer.Close()
+            Streamer.Dispose()
+        Catch ex As Exception
+            backlog = backlog + StringToLog + vbNewLine
+        End Try
         Return StringToLog
     End Function
 End Class
