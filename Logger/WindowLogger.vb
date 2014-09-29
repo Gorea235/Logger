@@ -28,6 +28,12 @@ Public Class WindowLogger
 
     Private _Width As UInteger
     Friend Shared Event WidthChanged(ByVal NewValue As UInteger)
+    ''' <summary>
+    ''' The width of the log form
+    ''' </summary>
+    ''' <value>The width in pixels</value>
+    ''' <returns>The width in pixels</returns>
+    ''' <remarks></remarks>
     Public Property Width As UInteger
         Get
             Return _Width
@@ -40,6 +46,12 @@ Public Class WindowLogger
 
     Private _Height As UInteger
     Friend Shared Event HeightChanged(ByVal NewValue As UInteger)
+    ''' <summary>
+    ''' The height of the log form
+    ''' </summary>
+    ''' <value>The height in pixels</value>
+    ''' <returns>The height in pixels</returns>
+    ''' <remarks></remarks>
     Public Property Height As UInteger
         Get
             Return _Height
@@ -52,6 +64,12 @@ Public Class WindowLogger
 
     Private _X As UInteger
     Friend Shared Event XChanged(ByVal NewValue As UInteger)
+    ''' <summary>
+    ''' The distance from the left side of the screen
+    ''' </summary>
+    ''' <value>The distance in pixels</value>
+    ''' <returns>The distance in pixels</returns>
+    ''' <remarks></remarks>
     Public Property X As UInteger
         Get
             Return _X
@@ -64,6 +82,12 @@ Public Class WindowLogger
 
     Private _Y As UInteger
     Friend Shared Event YChanged(ByVal NewValue As UInteger)
+    ''' <summary>
+    ''' The distance from the top of the screen
+    ''' </summary>
+    ''' <value>The distance in pixels</value>
+    ''' <returns>The distance in pixels</returns>
+    ''' <remarks></remarks>
     Public Property Y As UInteger
         Get
             Return _Y
@@ -74,6 +98,11 @@ Public Class WindowLogger
         End Set
     End Property
 
+    ''' <summary>
+    ''' Constucts a new logger form. Multiple can be created at once.
+    ''' </summary>
+    ''' <param name="show">Whether to show to form straight away</param>
+    ''' <remarks></remarks>
     Public Sub New(Optional ByVal show As Boolean = True)
         MainForm = New WindowLoggerForm()
         AddHandler WidthChanged, AddressOf Width_Changed
@@ -172,11 +201,18 @@ Public Class WindowLogger
         Return Processes.ContainsKey(uniqueName)
     End Function
 
+    ''' <summary>
+    ''' Stops and removes a running process.
+    ''' </summary>
+    ''' <param name="uniqueName">The process name</param>
+    ''' <remarks>Will throw InvalidConstraintException if the name doesn't exist.</remarks>
     Public Sub RemoveProcess(ByVal uniqueName As String)
         If Processes.ContainsKey(uniqueName) Then
             TmpProcess = Processes.Item(uniqueName)
             TmpProcess.Close()
             Processes.Remove(uniqueName)
+        Else
+            Throw New InvalidConstraintException("A process by the name doesn't exist.")
         End If
     End Sub
 
@@ -200,14 +236,27 @@ Public Class WindowLogger
         Processes.Remove(sender.Name)
     End Sub
 
+    ''' <summary>
+    ''' Shows the logger form.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub ShowLog()
         Me_Show()
     End Sub
 
+    ''' <summary>
+    ''' Hides the logger form.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub HideLog()
         Me_Hide()
     End Sub
 
+    ''' <summary>
+    ''' Sets the checkbox the will link to the form, so it will update the shown status and be updated.
+    ''' </summary>
+    ''' <param name="ckbx">The checkbox</param>
+    ''' <remarks>This allows for quick and simple implementation of the logging window, as all that is needed is a checkbox, and the logging window will hide when it is unchecked, show when it is checked, and it will uncheck it when the window is closed manually.</remarks>
     Public Sub SetCheckBox(ByVal ckbx As CheckBox)
         CheckBoxLink = ckbx
         AddHandler CheckBoxLink.CheckedChanged, AddressOf ckbx_CheckedChangedHandle
@@ -215,6 +264,10 @@ Public Class WindowLogger
         SetCheckBoxChecked()
     End Sub
 
+    ''' <summary>
+    ''' Unsets the checkbox currently linked to the form.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub UnsetCheckBox()
         RemoveHandler CheckBoxLink.CheckedChanged, AddressOf ckbx_CheckedChangedHandle
         RemoveHandler CheckBoxLink.Disposed, AddressOf ckbx_DisposedHandle
