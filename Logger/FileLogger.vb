@@ -1,5 +1,5 @@
 ﻿Imports System.IO
-Public Class Logger
+Public Class FileLogger
     Public Location As String
     Public Prefix As String
     Public AddTime As Boolean
