@@ -155,12 +155,21 @@ Public Class WindowLogger
     ''' Starts the process specified and records any log to the window.
     ''' </summary>
     ''' <param name="uniqueName">A reference name, allows for checking and stopping the process prematurely</param>
-    ''' <param name="proc">The actual executable, has to be a .exe</param>
+    ''' <param name="proc">The actual file to execute</param>
     ''' <param name="args">Any command line aruments you want to give the process</param>
     ''' <returns>Whether the process was started</returns>
-    ''' <remarks>If the process didn't start, possibly because the process given wasn't an exe, then it will only return False, it will not error or do any further notification.</remarks>
+    ''' <remarks>If there was a problem running the process, then no error will occur, only a Boolean return will say if the process started successfully.</remarks>
     Public Function AddProcess(ByVal uniqueName As String, ByVal proc As String, Optional ByVal args As String = "") As Boolean
         TmpProcess = New ProcessEx()
+
+        Dim procSplit As String() = proc.Split(".")
+        If procSplit.Length > 1 Then
+            Dim ext As String = procSplit(procSplit.Length - 1)
+            If ext.ToLower() <> "exe" Then
+                args = """" + proc + """" + args
+                proc = GetAssociatedProgram(ext)
+            End If
+        End If
 
         With TmpProcess
             .Name = uniqueName
